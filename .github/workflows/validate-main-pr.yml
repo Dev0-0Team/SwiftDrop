@@ -1,0 +1,22 @@
+
+name: Validate Main Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-source:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ensure source is develop
+        if: github.head_ref != 'develop'
+        run: |
+          echo "Pull requests to main must come from develop."
+          exit 1
+
+      - name: Source branch is valid
+        if: github.head_ref == 'develop'
+        run: echo "Valid pull request source."
