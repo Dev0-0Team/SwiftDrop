@@ -1,0 +1,27 @@
+using SwiftDrop.Models.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace SwiftDrop.Models.Configurations;
+
+public class ApplicationUserRoleConfiguration : IEntityTypeConfiguration<ApplicationUserRole>
+{
+    public void Configure(EntityTypeBuilder<ApplicationUserRole> builder)
+    {
+        builder.ToTable("UserRoles");
+
+        builder.HasKey(ur => new { ur.UserId, ur.RoleId });
+
+        builder.HasOne(ur => ur.User)
+            .WithMany(u => u.UserRoles)
+            .HasForeignKey(ur => ur.UserId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(ur => ur.Role)
+            .WithMany(r => r.UserRoles)
+            .HasForeignKey(ur => ur.RoleId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+}
